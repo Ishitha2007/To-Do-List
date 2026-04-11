@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flask Todo List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Todo List</h1>
+
+      <form action="{{ url_for('add_task') }}" method="post" class="task-form">
+        <input
+          type="text"
+          name="title"
+          placeholder="What needs to be done?"
+          required
+        />
+        <button type="submit">Add</button>
+      </form>
+
+      <div class="task-list">
+        {% for task in tasks %}
+        <div class="task-item {% if task.completed %}done{% endif %}">
+          <form action="{{ url_for('toggle_task', task_id=task.id) }}" method="post">
+            <button
+              class="toggle"
+              type="submit"
+              aria-label="{% if task.completed %}Mark as not done{% else %}Mark as done{% endif %}"
+            >
+              {% if task.completed %}&#10005;{% else %}&#10003;{% endif %}
+            </button>
+          </form>
+
+          <span>{{ task.title }}</span>
+
+          <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post">
+            <button class="delete" type="submit">Delete</button>
+          </form>
+        </div>
+        {% else %}
+        <div class="empty">No tasks yet. Add one above.</div>
+        {% endfor %}
+      </div>
+    </main>
+  </body>
+</html>
